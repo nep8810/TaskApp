@@ -11,7 +11,7 @@ import android.support.v7.app.AlertDialog
 import android.app.AlarmManager
 import android.app.PendingIntent
 
-const val EXTRA_TASK = "jp.techacademy.taro.kirameki.taskapp.TASK"
+const val EXTRA_TASK = "com.example.taskapp.TASK"
 
 
 class MainActivity : AppCompatActivity() {
@@ -98,10 +98,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun reloadListView() {
-        // Realmデータベースから、「全てのデータを取得して新しい日時順に並べた結果」を取得
+        // Realmデータベースから「全てのデータを取得して新しい日時順に並べた結果」を取得
+        // findAll で全てのTaskデータを取得して、sortで"date" （日時）を Sort.DESCENDING （降順）で並べ替えた結果を返す
         val taskRealmResults = mRealm.where(Task::class.java).findAll().sort("date", Sort.DESCENDING)
 
-        // 上記の結果を、TaskList としてセットする
+        // 上記の結果をmRealm.copyFromRealm(taskRealmResults) でコピーしてTaskList としてセットする
+        // Realmのデータベースから取得した内容をAdapterなど別の場所で使う場合は直接渡すのではなくコピーして渡す必要がある
         mTaskAdapter.taskList = mRealm.copyFromRealm(taskRealmResults)
 
         // TaskのListView用のアダプタに渡す
